@@ -18,7 +18,7 @@ class Environment:
 
     def __init__(self, args):
 
-        fname = 'DDQN' + '_' + args.environment + '_lr' + str(args.lr) + '_ep' + str(args.episode)
+        fname = 'DQN' + '_' + args.environment + '_lr' + str(args.lr) + '_ep' + str(args.episode)
         self.figure_file = fname + '.png'
         self.model_file = args.path + fname
 

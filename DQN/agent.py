@@ -2,7 +2,7 @@ import random
 import math
 import numpy as np
 
-from memory import ReplayMemory, Transition
+from memory import *
 from net import DQN
 
 import torch
@@ -28,9 +28,7 @@ class Agent:
         self.device = device
 
         self.main_net = DQN(n_actions=self.n_actions).to(self.device)
-        self.target_net = DQN(n_actions=self.n_actions).to(self.device)
-
-        self.target_net.load_state_dict(self.main_net.state_dict())
+        self.target_net = self.main_net
 
         print(self.main_net)
 
@@ -45,8 +43,6 @@ class Agent:
         """
         if mode == 'train':
             self.n_steps += 1
-            if self.n_steps % self.replace == 0:
-                self.update_target()
 
         epsilon = 0.5 * (1 / (self.n_steps + 1))
 
@@ -130,15 +126,12 @@ class Agent:
 
         self.optimizer.step()
 
-    def update_target(self):
-        self.target_net.load_state_dict(self.main_net.state_dict())
 
     def save_model(self, filename):
         torch.save(self.main_net, filename)
 
     def load_model(self, filename):
         self.main_net = torch.load(filename)
-        self.target_net.load_state_dict(self.main_net.state_dict())
     
     def memorize(self, state, action, state_next, reward):
         self.memory.push(state, action, state_next, reward)
