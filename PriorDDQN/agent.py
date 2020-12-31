@@ -164,6 +164,9 @@ class Agent:
     def memorize(self, state, action, state_next, reward):
         self.memory.push(state, action, state_next, reward)
     
+    def memorize_td_error(self, td_error):
+        self.td_error_memory.push(td_error)
+
     def update_td_error_memory(self):
         # 检查内存容量是否足够计算
         if len(self.memory) < self.batch_size:

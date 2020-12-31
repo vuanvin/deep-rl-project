@@ -87,7 +87,10 @@ class Environment:
 
                 reward = torch.tensor([reward], device=self.device)
 
+                # 记录该状态的经验和TD误差
                 self.agent.memorize(state, action.to('cpu'), next_state, reward.to('cpu'))
+                self.agent.memorize_td_error(0)
+
                 state = next_state
 
                 
