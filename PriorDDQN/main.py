@@ -95,7 +95,7 @@ class Environment:
 
                 
                 if self.n_steps > self.init_steps:
-                    self.agent.update()
+                    self.agent.update() # 更新参数
 
                 if done:
                     break

@@ -49,7 +49,7 @@ class Agent:
             if self.n_steps % self.replace == 0:
                 self.update_target()
 
-        epsilon = 0.5 * (1 / (self.n_steps + 1))
+        epsilon = 0.5 * (1 / (self.n_steps * 0.1 + 1))
 
         if epsilon <= np.random.uniform(0, 1) or mode == 'test':
             self.main_net.eval()
