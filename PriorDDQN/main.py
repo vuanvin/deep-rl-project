@@ -18,7 +18,7 @@ class Environment:
 
     def __init__(self, args):
 
-        fname = 'PriorDDQN' + '_' + args.environment + '_lr' + str(args.lr) + '_ep' + str(args.episode)
+        fname = 'PriorDDQN' + '_' + args.environment + '_lr' + str(args.lr) + '_ep' + str(args.episode) + '_batch' + str(args.batch_size)
         self.figure_file = fname + '.png'
         self.model_file = args.path + fname
         self.log_file = 'assets/' + fname + '.log'
@@ -27,7 +27,6 @@ class Environment:
         self.env = make_env(self.env)
 
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-        
         
 
         self.agent = Agent(gamma=args.gamma,

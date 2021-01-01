@@ -21,7 +21,8 @@ class Environment:
         fname = 'DuelingDDQN' + '_' + args.environment + '_lr' + str(args.lr) + '_ep' + str(args.episode)
         self.figure_file = fname + '.png'
         self.model_file = args.path + fname
-
+        self.log_file = 'assets/' + fname + '.log'
+        
         self.env = gym.make(args.environment)
         self.env = make_env(self.env)
 

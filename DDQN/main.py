@@ -18,9 +18,10 @@ class Environment:
 
     def __init__(self, args):
 
-        fname = 'DDQN' + '_' + args.environment + '_lr' + str(args.lr) + '_ep' + str(args.episode)
+        fname = 'DDQN' + '_' + args.environment + '_lr' + str(args.lr) + '_ep' + str(args.episode) + '_batch' + str(args.batch_size)
         self.figure_file = fname + '.png'
         self.model_file = args.path + fname
+        self.log_file = 'assets/' + fname + '.log'
 
         self.env = gym.make(args.environment)
         self.env = make_env(self.env)
