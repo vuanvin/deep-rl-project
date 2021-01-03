@@ -13,7 +13,8 @@ import torchvision.transforms as T
 
 
 class Agent:
-    def __init__(self, gamma, lr, input_dims, n_actions, mem_size, batch_size, device):
+    def __init__(self, gamma, lr, input_dims, n_actions, mem_size, batch_size,
+                  replace, device):
 
         self.gamma = gamma
         self.lr = lr
@@ -24,10 +25,13 @@ class Agent:
         self.td_error_memory = TDErrorMemory(mem_size)
         
         self.batch_size = batch_size
+        self.replace = replace
         self.device = device
 
         self.main_net = DQN(n_actions=self.n_actions).to(self.device)
+        self.target_net = DQN(n_actions=self.n_actions).to(self.device)
 
+        self.target_net.load_state_dict(self.main_net.state_dict())
 
         print(self.main_net)
 
@@ -42,6 +46,8 @@ class Agent:
         """
         if mode == 'train':
             self.n_steps += 1
+            if self.n_steps % self.replace == 0:
+                self.update_target()
 
         epsilon = 0.5 * (1 / (self.n_steps * 0.1 + 1))
 
@@ -113,7 +119,7 @@ class Agent:
         """获取期望的Q值"""
 
         self.main_net.eval()
-
+        self.target_net.eval()
 
         self.state_action_values = self.main_net(self.state_batch).gather(1, self.action_batch)
 
@@ -123,7 +129,7 @@ class Agent:
 
         next_state_values = torch.zeros(self.batch_size, device=self.device)
 
-        next_state_values[non_final_mask] = self.main_net(self.non_final_next_states).max(1)[0].detach()
+        next_state_values[non_final_mask] = self.target_net(self.non_final_next_states).max(1)[0].detach()
 
         expected_state_action_values = (next_state_values * self.gamma) + self.reward_batch
         return expected_state_action_values
@@ -145,11 +151,15 @@ class Agent:
 
         self.optimizer.step()
 
+    def update_target(self):
+        self.target_net.load_state_dict(self.main_net.state_dict())
+
     def save_model(self, filename):
         torch.save(self.main_net, filename)
 
     def load_model(self, filename):
         self.main_net = torch.load(filename)
+        self.target_net.load_state_dict(self.main_net.state_dict())
     
     def memorize(self, state, action, state_next, reward):
         self.memory.push(state, action, state_next, reward)

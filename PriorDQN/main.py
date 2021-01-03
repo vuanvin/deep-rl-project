@@ -35,6 +35,7 @@ class Environment:
                   n_actions=self.env.action_space.n,
                   mem_size=args.memory_capacity,
                   batch_size=args.batch_size,
+                  replace=args.replace,
                   device=self.device
                   )
 
@@ -184,6 +185,8 @@ if __name__ == '__main__':
     parser.add_argument('-c', '--memory_capacity', type=int, default=100000, help='Maximum size for memory replay buffer')
 
     parser.add_argument('-b', '--batch_size', type=int, default=32, help='Batch size for replay memory sampling')
+
+    parser.add_argument('-r', '--replace', type=int, default=1000, help='Interval for replacing target network')
 
     parser.add_argument('-env', '-e', '--environment', type=str, default='PongNoFrameskip-v4',
                             help='Atari environment.\nPongNoFrameskip-v4\n \
