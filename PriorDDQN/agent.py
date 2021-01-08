@@ -51,7 +51,7 @@ class Agent:
                 action = self.main_net(state.to('cuda')).max(1)[1].view(1, 1)
 
         else:
-            action = torch.tensor([[random.randrange(4)]], device=self.device, dtype=torch.long)
+            action = torch.tensor([[random.randrange(self.n_actions)]], device=self.device, dtype=torch.long)
 
         return action
 
